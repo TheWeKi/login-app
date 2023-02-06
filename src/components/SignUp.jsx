@@ -17,7 +17,6 @@ function SignUp() {
 
     const onSubmitHandler = (data) => {
         reset()
-        console.log(data)
         registerApi(data)
             .then( r => console.log(r) )
             .catch( e => console.log(e) )
@@ -36,7 +35,7 @@ function SignUp() {
 
                                     <div className="mb-md-5 mt-md-4 pb-5">
 
-                                        <h2 className="fw-bold mb-5 text-uppercase">Login</h2>
+                                        <h2 className="fw-bold mb-5 text-uppercase">Registration</h2>
 
                                         <form onSubmit={handleSubmit(onSubmitHandler)}>
 

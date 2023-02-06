@@ -16,7 +16,6 @@ function Login() {
 
     const onSubmitHandler = (data) => {
         reset()
-        console.log(data)
         loginApi(data)
             .then( r => console.log(r) )
             .catch( e => console.log(e) )
