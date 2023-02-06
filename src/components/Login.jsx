@@ -20,10 +20,7 @@ function Login() {
     const onSubmitHandler = (data) => {
         reset()
         loginApi(data)
-            .then( r => {
-                console.log(r)
-                navigate('/welcome')
-            } )
+            .then( () => navigate('/welcome') )
             .catch( e => console.log(e) )
     }
 

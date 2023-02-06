@@ -21,10 +21,7 @@ function SignUp() {
     const onSubmitHandler = (data) => {
         reset()
         registerApi(data)
-            .then( r => {
-                console.log(r)
-                navigate('/login')
-            } )
+            .then( () => navigate('/login') )
             .catch( e => console.log(e) )
     }
 
