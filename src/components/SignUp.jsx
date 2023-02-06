@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import {registerApi} from "./api/restApi";
+import {useNavigate} from "react-router-dom";
 
 const schema = yup.object().shape({
     email: yup.string().email().required('Email is required'),
@@ -11,6 +12,8 @@ const schema = yup.object().shape({
 
 function SignUp() {
 
+    const navigate = useNavigate()
+
     const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema)
     });
@@ -18,7 +21,10 @@ function SignUp() {
     const onSubmitHandler = (data) => {
         reset()
         registerApi(data)
-            .then( r => console.log(r) )
+            .then( r => {
+                console.log(r)
+                navigate('/login')
+            } )
             .catch( e => console.log(e) )
     }
 
@@ -33,7 +39,7 @@ function SignUp() {
                             <div className="card bg-dark text-white" style={{borderRadius: "1rem"}}>
                                 <div className="card-body p-5 text-center">
 
-                                    <div className="mb-md-5 mt-md-4 pb-5">
+                                    <div className="mb-md-5 mt-md-4">
 
                                         <h2 className="fw-bold mb-5 text-uppercase">Registration</h2>
 
@@ -63,7 +69,7 @@ function SignUp() {
                                                 <p className="text-warning"> {errors.password?.message} </p>
                                             </div>
 
-                                            <button className="btn btn-outline-light btn-lg px-5" type="submit">
+                                            <button className="btn btn-outline-light mt-4 btn-lg px-5" type="submit">
                                                 Sign Up
                                             </button>
                                         </form>

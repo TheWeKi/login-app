@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { loginApi } from "./api/restApi";
+import {useNavigate} from "react-router-dom";
 
 const schema = yup.object().shape({
     username: yup.string().min(4).max(16).required('User Id is required'),
@@ -10,6 +11,8 @@ const schema = yup.object().shape({
 
 function Login() {
 
+    const navigate = useNavigate();
+
     const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema)
     });
@@ -17,7 +20,10 @@ function Login() {
     const onSubmitHandler = (data) => {
         reset()
         loginApi(data)
-            .then( r => console.log(r) )
+            .then( r => {
+                console.log(r)
+                navigate('/welcome')
+            } )
             .catch( e => console.log(e) )
     }
 
