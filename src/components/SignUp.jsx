@@ -1,14 +1,15 @@
 import { useForm } from "react-hook-form";
 import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
-import { loginApi } from "./api/restApi";
+import {registerApi} from "./api/restApi";
 
 const schema = yup.object().shape({
+    email: yup.string().email().required('Email is required'),
     username: yup.string().min(4).max(16).required('User Id is required'),
     password: yup.string().min(4).max(32).required('Password is required')
 })
 
-function Login() {
+function SignUp() {
 
     const { register, handleSubmit, formState: {errors}, reset} = useForm({
         resolver: yupResolver(schema)
@@ -17,7 +18,7 @@ function Login() {
     const onSubmitHandler = (data) => {
         reset()
         console.log(data)
-        loginApi(data)
+        registerApi(data)
             .then( r => console.log(r) )
             .catch( e => console.log(e) )
     }
@@ -25,7 +26,7 @@ function Login() {
     return (
         <>
             <section className="vh-100"
-                style={{background: "linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))"}}
+                     style={{background: "linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))"}}
             >
                 <div className="container py-5 h-100">
                     <div className="row d-flex justify-content-center align-items-center h-100">
@@ -38,33 +39,36 @@ function Login() {
                                         <h2 className="fw-bold mb-5 text-uppercase">Login</h2>
 
                                         <form onSubmit={handleSubmit(onSubmitHandler)}>
-                                             <div className="form-outline form-white mb-4">
+
+                                            <div className="form-outline form-white mb-4">
+                                                <label className="form-label" htmlFor="email">Email</label>
+                                                <input type="email" name="email" placeholder="Email"
+                                                       className="form-control form-control-lg"
+                                                       {...register('email')} />
+                                                <p className="text-warning"> {errors.email?.message} </p>
+                                            </div>
+
+                                            <div className="form-outline form-white mb-4">
                                                 <label className="form-label" htmlFor="username">User ID</label>
                                                 <input type="text" name="username" placeholder="User Id"
-                                                    className="form-control form-control-lg" 
-                                                    {...register('username')} />
+                                                       className="form-control form-control-lg"
+                                                       {...register('username')} />
                                                 <p className="text-warning"> {errors.username?.message} </p>
                                             </div>
 
                                             <div className="form-outline form-white mb-4">
                                                 <label className="form-label" htmlFor="password">Password</label>
-                                                <input type="password" name="password" placeholder="Password" 
-                                                    className="form-control form-control-lg" 
-                                                    {...register('password')} />
+                                                <input type="password" name="password" placeholder="Password"
+                                                       className="form-control form-control-lg"
+                                                       {...register('password')} />
                                                 <p className="text-warning"> {errors.password?.message} </p>
                                             </div>
-                                        
+
                                             <button className="btn btn-outline-light btn-lg px-5" type="submit">
-                                                Login
+                                                Sign Up
                                             </button>
                                         </form>
-                                        
-                                    </div>
 
-                                    <div>
-                                        <p className="mb-0">
-                                            Don't have an account? <a href="/register" className="text-white-50 fw-bold">Sign Up</a>
-                                        </p>
                                     </div>
 
                                 </div>
@@ -77,4 +81,4 @@ function Login() {
     );
 }
 
-export { Login };
+export { SignUp };
