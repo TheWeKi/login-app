@@ -3,6 +3,7 @@ import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import {registerApi} from "./api/restApi";
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 
 const schema = yup.object().shape({
     email: yup.string().email().required('Email is required'),
@@ -11,6 +12,8 @@ const schema = yup.object().shape({
 })
 
 function SignUp() {
+
+    const [isUserExists, setIsUserExists] = useState(false);
 
     const navigate = useNavigate()
 
@@ -22,7 +25,10 @@ function SignUp() {
         reset()
         registerApi(data)
             .then( () => navigate('/login') )
-            .catch( e => console.log(e) )
+            .catch( e => {
+                console.log(e.response.data, e.response.status)
+                if(e.response.status === 400) setIsUserExists(true)
+            } )
     }
 
     return (
@@ -39,6 +45,8 @@ function SignUp() {
                                     <div className="mb-md-5 mt-md-4">
 
                                         <h2 className="fw-bold mb-5 text-uppercase">Registration</h2>
+
+                                        { isUserExists && <h5 className="text-warning mb-5 text-uppercase">User Already Exists</h5>}
 
                                         <form onSubmit={handleSubmit(onSubmitHandler)}>
 

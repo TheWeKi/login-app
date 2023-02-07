@@ -3,6 +3,8 @@ import * as yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
 import { loginApi } from "./api/restApi";
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+import {useAuthContext} from "./security/AuthContext";
 
 const schema = yup.object().shape({
     username: yup.string().min(4).max(16).required('User Id is required'),
@@ -10,6 +12,10 @@ const schema = yup.object().shape({
 })
 
 function Login() {
+
+    const useAuth = useAuthContext()
+
+    const [isWrongCredential, setIsWrongCredential]  = useState(false);
 
     const navigate = useNavigate();
 
@@ -20,8 +26,14 @@ function Login() {
     const onSubmitHandler = (data) => {
         reset()
         loginApi(data)
-            .then( () => navigate('/welcome') )
-            .catch( e => console.log(e) )
+            .then( () => {
+                useAuth.setIsAuthenticated(true)
+                navigate('/welcome')
+            } )
+            .catch( e => {
+                console.log(e)
+                if(e.response.status === 401) setIsWrongCredential(true)
+            } )
     }
 
     return (
@@ -38,6 +50,8 @@ function Login() {
                                     <div className="mb-md-5 mt-md-4 pb-5">
 
                                         <h2 className="fw-bold mb-5 text-uppercase">Login</h2>
+
+                                        { isWrongCredential && <h5 className="text-warning mb-5 text-uppercase">Wrong Credentials <br/> User Not Exist</h5>}
 
                                         <form onSubmit={handleSubmit(onSubmitHandler)}>
                                              <div className="form-outline form-white mb-4">

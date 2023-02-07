@@ -1,10 +1,14 @@
 import {useNavigate} from "react-router-dom";
+import {useAuthContext} from "./security/AuthContext";
 
 export function Logout() {
+
+    const useAuth = useAuthContext()
 
     const navigate = useNavigate();
 
     const handleClick = () => {
+        useAuth.setIsAuthenticated(false)
         navigate('/login')
     }
 
