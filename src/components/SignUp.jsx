@@ -26,7 +26,6 @@ function SignUp() {
         registerApi(data)
             .then( () => navigate('/login') )
             .catch( e => {
-                console.log(e.response.data, e.response.status)
                 if(e.response.status === 400) setIsUserExists(true)
             } )
     }

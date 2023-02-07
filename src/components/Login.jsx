@@ -31,7 +31,6 @@ function Login() {
                 navigate('/welcome')
             } )
             .catch( e => {
-                console.log(e)
                 if(e.response.status === 401) setIsWrongCredential(true)
             } )
     }
