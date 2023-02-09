@@ -5,6 +5,7 @@ import { loginApi } from "./api/restApi";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {useAuthContext} from "./security/AuthContext";
+import {clientUrl} from "./api/urlClient/urlClient";
 
 const schema = yup.object().shape({
     username: yup.string().min(4).max(16).required('User Id is required'),
@@ -26,13 +27,23 @@ function Login() {
     const onSubmitHandler = (data) => {
         reset()
         loginApi(data)
-            .then( () => {
-                useAuth.setIsAuthenticated(true)
-                navigate('/welcome')
-            } )
+            .then( response => loginSuccess(response) )
             .catch( e => {
                 if(e.response.status === 401) setIsWrongCredential(true)
             } )
+    }
+
+    const loginSuccess = (response) => {
+
+        clientUrl.interceptors.request.use(
+            config => {
+                config.headers.Authorization = `Bearer ${response.data.token}`;
+                return config;
+            }
+        )
+
+        useAuth.setIsAuthenticated(true)
+        navigate('/welcome')
     }
 
     return (
